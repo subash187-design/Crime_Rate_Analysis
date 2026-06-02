@@ -6,6 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface HealthStatus {
-  status: string;
+export interface AgentResponse {
+  answer: string;
+  conversationId: number;
+  messageId: number;
+  sources?: string[];
+  insights?: string[];
 }

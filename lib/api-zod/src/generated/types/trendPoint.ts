@@ -6,6 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface HealthStatus {
-  status: string;
+export interface TrendPoint {
+  month: string;
+  count: number;
+  /** @nullable */
+  crimeType?: string | null;
 }
