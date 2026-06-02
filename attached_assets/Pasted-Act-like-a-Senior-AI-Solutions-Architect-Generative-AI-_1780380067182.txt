@@ -1,0 +1,95 @@
+Act like a Senior AI Solutions Architect, Generative AI Engineer, Data Scientist, and Full-Stack Software Architect specializing in RAG (Retrieval-Augmented Generation), LangChain, Agentic AI Systems, Crime Analytics, and Enterprise Dashboard Development.
+
+Your goal is to design a complete production-ready web application for a Crime Rate Analysis Dashboard powered by a single AI agent, RAG architecture, and LangChain.
+
+Task: Create a comprehensive technical solution blueprint, system architecture, implementation plan, and code structure for the application.
+
+Requirements:
+
+1. Define the business problem, objectives, users, and expected outcomes.
+2. Design an end-to-end architecture including:
+   - Frontend
+   - Backend APIs
+   - LangChain orchestration layer
+   - Single AI Agent
+   - Vector Database
+   - Embedding Model
+   - LLM
+   - RAG Pipeline
+   - Data Warehouse / Database
+   - Authentication & Security Layer
+3. Explain the complete RAG workflow:
+   - Data ingestion
+   - Data cleaning
+   - Chunking strategy
+   - Embedding generation
+   - Vector indexing
+   - Retrieval process
+   - Context augmentation
+   - Response generation
+4. Design the AI Agent capabilities:
+   - Crime trend analysis
+   - Predictive insights
+   - Hotspot identification
+   - Natural language querying
+   - Dashboard recommendations
+   - Report generation
+5. Recommend the technology stack with justification.
+6. Provide LangChain architecture, chains, tools, memory, prompts, retrievers, and agent workflow.
+7. Design database schemas and vector store structure.
+8. Create dashboard modules:
+   - Crime Overview
+   - Heatmaps
+   - Geo-spatial Analysis
+   - Crime Forecasting
+   - Demographic Correlation
+   - AI Insights Panel
+9. Include sample crime datasets and retrieval examples.
+10. Provide folder structure for frontend and backend.
+11. Generate API specifications and endpoint designs.
+12. Include deployment architecture using Docker, Kubernetes, CI/CD, monitoring, and logging.
+13. Discuss scalability, performance optimization, security, privacy, and compliance considerations.
+14. Provide implementation roadmap from MVP to enterprise-scale deployment.
+
+Context:
+
+The system should allow users to upload crime datasets, police reports, FIR records, incident logs, census data, and public safety documents. The RAG pipeline must retrieve relevant contextual information from the vector database and provide evidence-based responses. The single AI agent should use LangChain tools to analyze crime patterns, generate insights, answer user questions, and support decision-making through an interactive dashboard.
+
+Constraints:
+
+- Use a production-grade architecture.
+- Avoid generic explanations.
+- Include architecture diagrams using Mermaid.
+- Include workflow diagrams.
+- Include database ER diagrams.
+- Include API request/response examples.
+- Include LangChain code examples.
+- Include retrieval and agent execution flow examples.
+- Clearly separate functional and non-functional requirements.
+- Use structured Markdown format with tables where appropriate.
+- Provide rationale for every major design decision.
+- Focus on enterprise deployment, scalability, maintainability, and real-world implementation.
+- Do not add unnecessary features outside the defined scope.
+
+Output Format:
+
+1. Executive Summary
+2. Functional Requirements
+3. Non-Functional Requirements
+4. System Architecture
+5. RAG Architecture
+6. LangChain Agent Design
+7. Database Design
+8. Dashboard Design
+9. API Design
+10. Code Structure
+11. Security Architecture
+12. Deployment Architecture
+13. Scalability Strategy
+14. Implementation Roadmap
+15. Risks & Mitigation
+16. Future Enhancements
+
+Before finalizing, perform a completeness review to ensure every requested component has been covered with implementation-level detail, architecture diagrams, workflows, schemas, and enterprise best practices.
+
+Take a deep breath and work on this problem step-by-step.

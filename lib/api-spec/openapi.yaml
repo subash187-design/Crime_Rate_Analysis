@@ -3,13 +3,22 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Crime Rate Analysis Dashboard API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: incidents
+    description: Crime incident operations
+  - name: analytics
+    description: Analytics and aggregation
+  - name: agent
+    description: AI Agent operations
+  - name: documents
+    description: Document upload and management
+
 paths:
   /healthz:
     get:
@@ -24,6 +33,335 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # ─── Crime Incidents ─────────────────────────────────────────────
+  /incidents:
+    get:
+      operationId: listIncidents
+      tags: [incidents]
+      summary: List crime incidents
+      parameters:
+        - name: crimeType
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: district
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: startDate
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: endDate
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: limit
+          in: query
+          schema:
+            type: ["integer", "null"]
+        - name: offset
+          in: query
+          schema:
+            type: ["integer", "null"]
+      responses:
+        "200":
+          description: List of incidents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Incident"
+    post:
+      operationId: createIncident
+      tags: [incidents]
+      summary: Create a crime incident
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IncidentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Incident"
+
+  /incidents/{id}:
+    get:
+      operationId: getIncident
+      tags: [incidents]
+      summary: Get a single incident
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Incident
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Incident"
+        "404":
+          description: Not found
+
+  # ─── Analytics ────────────────────────────────────────────────────
+  /analytics/summary:
+    get:
+      operationId: getAnalyticsSummary
+      tags: [analytics]
+      summary: Dashboard summary stats
+      responses:
+        "200":
+          description: Summary statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsSummary"
+
+  /analytics/by-type:
+    get:
+      operationId: getIncidentsByType
+      tags: [analytics]
+      summary: Incidents grouped by crime type
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: endDate
+          in: query
+          schema:
+            type: ["string", "null"]
+      responses:
+        "200":
+          description: Crime type breakdown
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CrimeTypeCount"
+
+  /analytics/by-district:
+    get:
+      operationId: getIncidentsByDistrict
+      tags: [analytics]
+      summary: Incidents grouped by district
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: endDate
+          in: query
+          schema:
+            type: ["string", "null"]
+      responses:
+        "200":
+          description: District breakdown
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DistrictCount"
+
+  /analytics/trend:
+    get:
+      operationId: getCrimeTrend
+      tags: [analytics]
+      summary: Crime trend over time (monthly)
+      parameters:
+        - name: crimeType
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: months
+          in: query
+          schema:
+            type: ["integer", "null"]
+      responses:
+        "200":
+          description: Monthly trend data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TrendPoint"
+
+  /analytics/hotspots:
+    get:
+      operationId: getHotspots
+      tags: [analytics]
+      summary: Geographic crime hotspots
+      parameters:
+        - name: crimeType
+          in: query
+          schema:
+            type: ["string", "null"]
+        - name: limit
+          in: query
+          schema:
+            type: ["integer", "null"]
+      responses:
+        "200":
+          description: Hotspot locations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Hotspot"
+
+  /analytics/hourly-pattern:
+    get:
+      operationId: getHourlyPattern
+      tags: [analytics]
+      summary: Crime distribution by hour of day
+      responses:
+        "200":
+          description: Hourly distribution
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/HourlyCount"
+
+  /analytics/recent:
+    get:
+      operationId: getRecentIncidents
+      tags: [analytics]
+      summary: Most recent incidents feed
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: ["integer", "null"]
+      responses:
+        "200":
+          description: Recent incidents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Incident"
+
+  # ─── AI Agent ─────────────────────────────────────────────────────
+  /agent/query:
+    post:
+      operationId: queryAgent
+      tags: [agent]
+      summary: Ask the AI crime analysis agent a question
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AgentQueryInput"
+      responses:
+        "200":
+          description: Agent response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentResponse"
+
+  /agent/conversations:
+    get:
+      operationId: listConversations
+      tags: [agent]
+      summary: List agent conversations
+      responses:
+        "200":
+          description: Conversations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Conversation"
+    post:
+      operationId: createConversation
+      tags: [agent]
+      summary: Create a new conversation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConversationInput"
+      responses:
+        "201":
+          description: Created conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversation"
+
+  /agent/conversations/{id}/messages:
+    get:
+      operationId: getConversationMessages
+      tags: [agent]
+      summary: Get messages in a conversation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Message"
+
+  # ─── Documents ────────────────────────────────────────────────────
+  /documents:
+    get:
+      operationId: listDocuments
+      tags: [documents]
+      summary: List uploaded documents
+      responses:
+        "200":
+          description: Documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Document"
+
+  /documents/{id}:
+    delete:
+      operationId: deleteDocument
+      tags: [documents]
+      summary: Delete a document
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +372,222 @@ components:
       required:
         - status
 
+    Incident:
+      type: object
+      required: [id, crimeType, district, latitude, longitude, occurredAt, severity, status, createdAt]
+      properties:
+        id:
+          type: integer
+        crimeType:
+          type: string
+        description:
+          type: ["string", "null"]
+        district:
+          type: string
+        address:
+          type: ["string", "null"]
+        latitude:
+          type: number
+        longitude:
+          type: number
+        occurredAt:
+          type: string
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        status:
+          type: string
+          enum: [open, under_investigation, closed]
+        victimCount:
+          type: ["integer", "null"]
+        suspectDescription:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    IncidentInput:
+      type: object
+      required: [crimeType, district, latitude, longitude, occurredAt, severity]
+      properties:
+        crimeType:
+          type: string
+        description:
+          type: string
+        district:
+          type: string
+        address:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        occurredAt:
+          type: string
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        status:
+          type: string
+          enum: [open, under_investigation, closed]
+        victimCount:
+          type: integer
+        suspectDescription:
+          type: string
+
+    AnalyticsSummary:
+      type: object
+      required: [totalIncidents, openCases, closedCases, criticalIncidents, avgDailyIncidents, topCrimeType, topDistrict, changeFromLastMonth]
+      properties:
+        totalIncidents:
+          type: integer
+        openCases:
+          type: integer
+        closedCases:
+          type: integer
+        criticalIncidents:
+          type: integer
+        avgDailyIncidents:
+          type: number
+        topCrimeType:
+          type: string
+        topDistrict:
+          type: string
+        changeFromLastMonth:
+          type: number
+
+    CrimeTypeCount:
+      type: object
+      required: [crimeType, count]
+      properties:
+        crimeType:
+          type: string
+        count:
+          type: integer
+
+    DistrictCount:
+      type: object
+      required: [district, count]
+      properties:
+        district:
+          type: string
+        count:
+          type: integer
+
+    TrendPoint:
+      type: object
+      required: [month, count]
+      properties:
+        month:
+          type: string
+        count:
+          type: integer
+        crimeType:
+          type: ["string", "null"]
+
+    Hotspot:
+      type: object
+      required: [latitude, longitude, count, district, crimeType]
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
+        count:
+          type: integer
+        district:
+          type: string
+        crimeType:
+          type: string
+        riskLevel:
+          type: string
+
+    HourlyCount:
+      type: object
+      required: [hour, count]
+      properties:
+        hour:
+          type: integer
+        count:
+          type: integer
+
+    AgentQueryInput:
+      type: object
+      required: [question]
+      properties:
+        question:
+          type: string
+        conversationId:
+          type: ["integer", "null"]
+
+    AgentResponse:
+      type: object
+      required: [answer, conversationId, messageId]
+      properties:
+        answer:
+          type: string
+        conversationId:
+          type: integer
+        messageId:
+          type: integer
+        sources:
+          type: array
+          items:
+            type: string
+        insights:
+          type: array
+          items:
+            type: string
+
+    Conversation:
+      type: object
+      required: [id, title, createdAt, messageCount]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        createdAt:
+          type: string
+        messageCount:
+          type: integer
+
+    ConversationInput:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+
+    Message:
+      type: object
+      required: [id, conversationId, role, content, createdAt]
+      properties:
+        id:
+          type: integer
+        conversationId:
+          type: integer
+        role:
+          type: string
+          enum: [user, assistant]
+        content:
+          type: string
+        createdAt:
+          type: string
+
+    Document:
+      type: object
+      required: [id, filename, fileType, status, createdAt]
+      properties:
+        id:
+          type: integer
+        filename:
+          type: string
+        fileType:
+          type: string
+        status:
+          type: string
+          enum: [processing, indexed, failed]
+        chunkCount:
+          type: ["integer", "null"]
+        createdAt:
+          type: string
