@@ -116,19 +116,22 @@ Crime Database Context:
     .values({ conversationId: convoId, role: "user", content: question })
     .returning();
 
-  // Check for OpenAI API key
-  const apiKey = process.env.OPENAI_API_KEY;
+  // Check for Groq API key (OpenAI-compatible)
+  const apiKey = process.env.GROQ_API_KEY;
 
   let answer: string;
   let insights: string[] = [];
   let sources: string[] = ["Live crime database", "Incident records"];
 
   if (!apiKey) {
-    answer = "AI agent is not configured. Please provide an OPENAI_API_KEY environment variable to enable natural language crime analysis.";
+    answer = "AI agent is not configured. Please provide a GROQ_API_KEY environment variable to enable natural language crime analysis.";
   } else {
     try {
       const OpenAI = (await import("openai")).default;
-      const openai = new OpenAI({ apiKey });
+      const openai = new OpenAI({
+        apiKey,
+        baseURL: "https://api.groq.com/openai/v1",
+      });
 
       // Retrieve prior conversation messages for context
       const priorMessages = await db
@@ -155,7 +158,7 @@ ${context}`,
       ];
 
       const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "llama-3.3-70b-versatile",
         messages: chatMessages,
         max_tokens: 1024,
       });
